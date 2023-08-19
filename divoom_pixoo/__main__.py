@@ -1,4 +1,5 @@
 import struct
+import socket
 from time import sleep
 
 DIVOOM_PIXOO_PROTOCOL_MESSAGE_START = b'\x01'
@@ -38,17 +39,24 @@ def bytes_repr(data: bytes) -> str:
 if __name__ == '__main__':
     rfcomm_dev = '/dev/rfcomm0'
 
+    pixoo_baddr = '11:75:58:82:21:EA'
+    port = 1
 
     brightness_max = set_brightness_msg(100)
     brightness_min = set_brightness_msg(1)
 
-
     print(f'Max: {bytes_repr(brightness_max)}\nMin: {bytes_repr(brightness_min)}')
 
-    with open(rfcomm_dev, 'w') as rfcomm:
-        for i in range(10):
-            print(f'round {i}')
-            rfcomm.write(brightness_max.hex())
-            sleep(1)
-            rfcomm.write(brightness_min.hex())
-            sleep(1)
+    # Establish connection and setup serial communication
+    s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+    s.connect((pixoo_baddr, port))
+
+    for i in range(10):
+        print(f'round {i}')
+        s.sendall(brightness_max.hex())
+        sleep(1)
+        s.sendall(brightness_min.hex())
+        sleep(1)
+
+    s.close()
+
