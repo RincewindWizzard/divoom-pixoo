@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "divoom-pixoo"
+version = "0.1.0"
+description = ""
+authors = ["RincewindWizzard <git@magierdinge.de>"]
+readme = "README.md"
+packages = [{include = "divoom_pixoo"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pillow = "^10.0.0"
+bluedot = "^2.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
